@@ -1,3 +1,4 @@
+import java.nio.*;
 pt DONT_INTERSECT = P(-1,-1);
 pt COLLINEAR = P(-2,-2);
 pt DONT_INTERSECT2 = P(-3,-3);
@@ -137,3 +138,33 @@ boolean same_sign(float a, float b){
 float positive(float a) { if(a<0) return a+TWO_PI; else return a;}                                   // adds 2PI to make angle positive
 int toDeg(float a) {return int(a*180/PI);}                                                           // convert radians to degrees
 boolean isSame(pt A, pt B) {return (A.x==B.x)&&(A.y==B.y)&&(A.z==B.z) ;}                                         // A==B
+
+public pt pick(int mX, int mY)
+{
+  PGL pgl = beginPGL();
+  FloatBuffer depthBuffer = ByteBuffer.allocateDirect(1 << 2).order(ByteOrder.
+nativeOrder()).asFloatBuffer();
+  pgl.readPixels(mX, height - mY - 1, 1, 1, PGL.DEPTH_COMPONENT, PGL.FLOAT, depthBuffer);
+  float depthValue = depthBuffer.get(0);
+  depthBuffer.clear();
+  endPGL();
+
+  //get 3d matrices
+  PGraphics3D p3d = (PGraphics3D)g;
+  PMatrix3D proj = p3d.projection.get();
+  PMatrix3D modelView = p3d.modelview.get();
+  PMatrix3D modelViewProjInv = proj; modelViewProjInv.apply( modelView ); modelViewProjInv.invert();
+  
+  float[] viewport = {0, 0, p3d.width, p3d.height};
+  
+  float[] normalized = new float[4];
+  normalized[0] = ((mX - viewport[0]) / viewport[2]) * 2.0f - 1.0f;
+  normalized[1] = ((height - mY - viewport[1]) / viewport[3]) * 2.0f - 1.0f;
+  normalized[2] = depthValue * 2.0f - 1.0f;
+  normalized[3] = 1.0f;
+  
+  float[] unprojected = new float[4];
+  
+  modelViewProjInv.mult( normalized, unprojected );
+  return P( unprojected[0]/unprojected[3], unprojected[1]/unprojected[3], unprojected[2]/unprojected[3] );
+}

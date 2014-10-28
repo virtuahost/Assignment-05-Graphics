@@ -38,7 +38,15 @@ void calculateOnMousePressChanges()
   
   if(selectMode)
   {
-    selectCorner(Mouse(), true);
+    if(!threeDMode)
+    {
+      selectCorner(Mouse(), true);
+    }
+    else
+    {
+      pt P = pick(mouseX,mouseY);
+      selectCorner3D(P);
+    }
   }
 }
 

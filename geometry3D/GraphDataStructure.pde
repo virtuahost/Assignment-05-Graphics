@@ -833,7 +833,7 @@ public void drawGraph()
     }
   }
 
-  if (showSelCorner && selCorner != -1)
+  if (!threeDMode && showSelCorner && selCorner != -1)
   {   
     if (!selCornerIsLoop)
     {
@@ -891,6 +891,17 @@ public void drawGraph()
       fill(black);
       text("Selected Face " + smallestCornerIndex + " has an area of " + CalculateArea(), 100, 120);
     }
+  }
+  if(threeDMode && showSelCorner && selCorner != -1)
+  {
+      fill(black);
+
+      drawNextCorner(selCorner);
+      drawPrevCorner(selCorner);
+      drawSwingCorner(selCorner);
+      //drawUnswingCorner(selCorner);
+      //drawZCorner(selCorner);
+      drawCorner(selCorner, red, false);
   }
 }
 
@@ -1221,6 +1232,10 @@ public void recurse3DArray(int i)
         }
       }
     }
+//    if(arrCalArea.size()==0 && loopStart > -1)
+//    {
+//      return;
+//    }
     addTo3DStructure(cp, (arrCalArea.size()==0));
     arrCalArea.add(cp);
     arrCalArea.add(ncp);
@@ -1239,10 +1254,10 @@ public Boolean draw3DArray()
   for (int i =0; i<V3D.size();i++)
   {
     beginShape();
-    fill(yellow);
+    //fill(yellow);
 //    show(G3D.get(V3D.get(i)),10);//,G3D.get(V3D.get(NC3D.get(i))));
-    stroke(cyan);stub(G3D.get(V3D.get(i)), V(G3D.get(V3D.get(i)), G3D.get(V3D.get(NC3D.get(i)))), 4, 2);
-    stub(cornerPosition3D(V3D.get(i)), V(cornerPosition3D(V3D.get(i)), cornerPosition3D(V3D.get(NC3D.get(i)))), 4, 2);
+    fill(cyan);stub(G3D.get(V3D.get(i)), V(G3D.get(V3D.get(i)), G3D.get(V3D.get(NC3D.get(i)))), 4, 2);noFill();
+    fill(yellow);stub(cornerPosition3D(V3D.get(i)), V(cornerPosition3D(V3D.get(i)), cornerPosition3D(V3D.get(NC3D.get(i)))), 4, 2);noFill();
     endShape(CLOSE);
   }
   return true;
@@ -1272,7 +1287,7 @@ public pt cornerPosition3D(int i) //asdf
     //return P(G.get(V.get(i)));
   }
 
-  float s = 10/det3(ba.normalize(), bc.normalize());
+  float s = 10/det2(ba.normalize(), bc.normalize());
   vec f = A(ba, bc);
   //  println("Vector :" + i + "before stuff f:" + f.x + ", " + f.y);
   //  println("Vector :" + i + "before stuff :" + P(G.get(V.get(i)), f).write());
@@ -1347,7 +1362,7 @@ public void addTo3DStructure(pt P, Boolean newLoop)
   println("NC: " + (NC3D.size() - 6) + " value: " + NC3D.get(NC3D.size()-6));
   if (!newLoop)
   {
-    NC3D.set(NC3D.size()-5, V3D.size()-11);//To be updated again on newLoop start for the previous iteration to close loop.C2
+    NC3D.set(NC3D.size()-5, V3D.size()-10);//To be updated again on newLoop start for the previous iteration to close loop.C2
     println("NC: " + (NC3D.size() - 5) + " value: " + NC3D.get(NC3D.size()-5));
   }
   NC3D.set(NC3D.size()-4, V3D.size()-2);//C3
@@ -1432,6 +1447,21 @@ public void draw3DCorner(int i, int col, boolean ext)
   stroke(col);
   fill(col);
   show(p, 2);
+}
+public void selectCorner3D(pt P)
+{
+  println("Points: " + P.x +", " + P.y +", " + P.z);
+  for(int i =0;i<V3D.size();i++)
+  {
+    pt Q = cornerPosition3D(i);    
+    println("Q Points: " + Q.x +", "+ Q.y +", "+ Q.z);
+    if(d(P,Q)<5)
+    {
+      showSelCorner = true;
+      selCorner = i;
+      break;
+    }
+  }
 }
 
 public float CalculateArea()

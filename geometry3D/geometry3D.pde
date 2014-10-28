@@ -13,6 +13,7 @@ void setup() {
   //P.loadPts("data/pts");  // loads saved model from file
   //Q.loadPts("data/pts2");  // loads saved model from file
   initBase();
+  noSmooth();
   }
 
 void draw() {
