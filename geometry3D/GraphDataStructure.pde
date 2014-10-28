@@ -896,12 +896,12 @@ public void drawGraph()
   {
       fill(black);
 
-      drawNextCorner(selCorner);
-      drawPrevCorner(selCorner);
-      drawSwingCorner(selCorner);
+      draw3DNextCorner(selCorner);
+      draw3DPrevCorner(selCorner);
+      draw3DSwingCorner(selCorner);
       //drawUnswingCorner(selCorner);
       //drawZCorner(selCorner);
-      drawCorner(selCorner, red, false);
+      draw3DCorner(selCorner, red, false);
   }
 }
 
@@ -1256,49 +1256,35 @@ public Boolean draw3DArray()
     beginShape();
     //fill(yellow);
 //    show(G3D.get(V3D.get(i)),10);//,G3D.get(V3D.get(NC3D.get(i))));
-    fill(cyan);stub(G3D.get(V3D.get(i)), V(G3D.get(V3D.get(i)), G3D.get(V3D.get(NC3D.get(i)))), 4, 2);noFill();
-    fill(yellow);stub(cornerPosition3D(V3D.get(i)), V(cornerPosition3D(V3D.get(i)), cornerPosition3D(V3D.get(NC3D.get(i)))), 4, 2);noFill();
+    fill(cyan);stub(G3D.get(V3D.get(i)), V(G3D.get(V3D.get(i)), G3D.get(V3D.get(NC3D.get(i)))), 1, 1);noFill();
+    //fill(yellow);stub(cornerPosition3D(i), V(cornerPosition3D(i), cornerPosition3D(NC3D.get(i))), 1, 1);noFill();
     endShape(CLOSE);
   }
   return true;
 }
 
-public pt cornerPosition3D(int i) //asdf
+public pt cornerPosition3D(int i) 
 {
   if (i == S3D.get(i))
   {
-    //println("hellow " + P(G.get(V.get(i))).write());
     vec bf = V(G3D.get(V3D.get(i)), G3D.get(V3D.get(NC3D.get(i))));
     bf.normalize().mul(20).rev();
     //return P(G.get(V.get(i)));
     return P(G3D.get(V3D.get(i)), bf);
   }
-  //  println("Vector :" + i + "pointss :" + G.get(V.get(i)).write() + ", " + G.get(V.get(NC.get(i))).write());
-  //  println("Vector :" + i + "points :" + G.get(V.get(i)).write() + ", " + G.get(V.get(prevCorner(i))).write());
 
   vec bc = V(G3D.get(V3D.get(i)), G3D.get(V3D.get(NC3D.get(i))));
   vec ba = V(G3D.get(V3D.get(i)), G3D.get(V3D.get(prev3DCorner(i))));
-  //  println("Vector :" + i + "plain vector :" + bc.x + ", " + bc.y);
-  //  println("Vector :" + i + "plain vectors :" + ba.x + ", " + ba.y);
   BCBA = positive(angle(bc, ba, true));
-  if (toDeg(positive(angle(bc, ba, true))) == 180)
-    //if(toDeg(angle(bc, ba)) == 180)
-  {
-    //return P(G.get(V.get(i)));
-  }
 
   float s = 10/det2(ba.normalize(), bc.normalize());
   vec f = A(ba, bc);
-  //  println("Vector :" + i + "before stuff f:" + f.x + ", " + f.y);
-  //  println("Vector :" + i + "before stuff :" + P(G.get(V.get(i)), f).write());
   if (Float.isInfinite(s))
   {
     s=10;
     f=R(bc.normalize()).rev();
   }
   f.mul(s).rev();
-  //  println("Vector :" + i + "after stuff f:" + f.x + ", " + f.y);
-  //  println("Vector :" + i + "after stuff :" + P(G.get(V.get(i)), f).write());
 
   return P(G3D.get(V3D.get(i)), f);
 }
@@ -1443,6 +1429,7 @@ public void draw3DZCorner(int i)
 
 public void draw3DCorner(int i, int col, boolean ext)
 {
+//  pt p = G3D.get(V3D.get(i));
   pt p = cornerPosition3D(i);
   stroke(col);
   fill(col);
@@ -1450,18 +1437,43 @@ public void draw3DCorner(int i, int col, boolean ext)
 }
 public void selectCorner3D(pt P)
 {
-  println("Points: " + P.x +", " + P.y +", " + P.z);
-  for(int i =0;i<V3D.size();i++)
-  {
-    pt Q = cornerPosition3D(i);    
-    println("Q Points: " + Q.x +", "+ Q.y +", "+ Q.z);
-    if(d(P,Q)<5)
-    {
-      showSelCorner = true;
-      selCorner = i;
-      break;
-    }
-  }
+  showSelCorner = true;
+  selCorner = 5;
+//  println("Points: " + P.x +", " + P.y +", " + P.z);
+//  for(int i =0;i<V3D.size();i++)
+//  {
+//    pt Q = cornerPosition3D(i);    
+//    println("Q Points: " + Q.x +", "+ Q.y +", "+ Q.z);
+//    if(d(P,Q)<5)
+//    {
+//      showSelCorner = true;
+//      selCorner = i;
+//      break;
+//    }
+//  }
+}
+
+public void move3DNext()
+{
+  println("Curr Corner: " + selCorner);
+  selCorner = NC3D.get(selCorner);
+  println("Next Corner: " + selCorner);
+}
+public void move3DPrev()
+{
+  selCorner = prev3DCorner(selCorner);
+}
+public void move3DSwing()
+{
+  selCorner = S3D.get(selCorner);
+}
+public void move3DUnswing()
+{
+  selCorner = unswing3DCorner(selCorner);
+}
+public void move3DZ()
+{
+  selCorner = z3DCorner(selCorner);
 }
 
 public float CalculateArea()
