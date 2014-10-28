@@ -829,7 +829,7 @@ public void drawGraph()
   {
     if (draw3DArray())
     {
-      stopColorGeneration = true;
+      //stopColorGeneration = true;
     }
   }
 
@@ -954,10 +954,12 @@ public Boolean drawFaceLoops()
     arrTV.add(1);
   }
   colorIndex = 0;
+  arrCalArea.clear();
   if (threeDMode)
   {
     fill(green);
   }
+  smallestCornerID = -1;
   recurseDrawFace(0);
   //  println("Start");
   if (toVisitCount == 0) 
@@ -979,13 +981,13 @@ public void recurseDrawFace(int i)
     //      }
   } else if (toVisitCount != 0)
   {
-    float area = CalculateArea();      
+    float area = CalculateArea();   
     int temp = i;
     if (smallestCornerID > -1)
     {
       //        println("New Loop");
-      if (!threeDMode)
-      {
+//      if (!threeDMode)
+//      {
         if (outSideLoop)
         { 
           fill(randomLoopColor.get(colorIndex));
@@ -998,7 +1000,7 @@ public void recurseDrawFace(int i)
           noFill();
           outSideLoop = true;
         }
-      }
+//      }
     }
     smallestCornerID = -1;
     arrCalArea.clear();
@@ -1022,8 +1024,8 @@ public void recurseDrawFace(int i)
   } else
   {
     float area = CalculateArea();   
-    if (!threeDMode)
-    {
+//    if (!threeDMode)
+//    {
       if (outSideLoop)
       { 
         fill(randomLoopColor.get(colorIndex));
@@ -1036,7 +1038,7 @@ public void recurseDrawFace(int i)
         noFill();
         outSideLoop = true;
       }
-    }
+//    }
     smallestCornerID = -1;
     arrCalArea.clear();
     return;
@@ -1239,10 +1241,51 @@ public Boolean draw3DArray()
     beginShape();
     fill(yellow);
 //    show(G3D.get(V3D.get(i)),10);//,G3D.get(V3D.get(NC3D.get(i))));
-    stub(G3D.get(V3D.get(i)), V(G3D.get(V3D.get(i)), G3D.get(V3D.get(NC3D.get(i)))), 4, 2);
+    stroke(cyan);stub(G3D.get(V3D.get(i)), V(G3D.get(V3D.get(i)), G3D.get(V3D.get(NC3D.get(i)))), 4, 2);
+    stub(cornerPosition3D(V3D.get(i)), V(cornerPosition3D(V3D.get(i)), cornerPosition3D(V3D.get(NC3D.get(i)))), 4, 2);
     endShape(CLOSE);
   }
   return true;
+}
+
+public pt cornerPosition3D(int i) //asdf
+{
+  if (i == S3D.get(i))
+  {
+    //println("hellow " + P(G.get(V.get(i))).write());
+    vec bf = V(G3D.get(V3D.get(i)), G3D.get(V3D.get(NC3D.get(i))));
+    bf.normalize().mul(20).rev();
+    //return P(G.get(V.get(i)));
+    return P(G3D.get(V3D.get(i)), bf);
+  }
+  //  println("Vector :" + i + "pointss :" + G.get(V.get(i)).write() + ", " + G.get(V.get(NC.get(i))).write());
+  //  println("Vector :" + i + "points :" + G.get(V.get(i)).write() + ", " + G.get(V.get(prevCorner(i))).write());
+
+  vec bc = V(G3D.get(V3D.get(i)), G3D.get(V3D.get(NC3D.get(i))));
+  vec ba = V(G3D.get(V3D.get(i)), G3D.get(V3D.get(prev3DCorner(i))));
+  //  println("Vector :" + i + "plain vector :" + bc.x + ", " + bc.y);
+  //  println("Vector :" + i + "plain vectors :" + ba.x + ", " + ba.y);
+  BCBA = positive(angle(bc, ba, true));
+  if (toDeg(positive(angle(bc, ba, true))) == 180)
+    //if(toDeg(angle(bc, ba)) == 180)
+  {
+    //return P(G.get(V.get(i)));
+  }
+
+  float s = 10/det3(ba.normalize(), bc.normalize());
+  vec f = A(ba, bc);
+  //  println("Vector :" + i + "before stuff f:" + f.x + ", " + f.y);
+  //  println("Vector :" + i + "before stuff :" + P(G.get(V.get(i)), f).write());
+  if (Float.isInfinite(s))
+  {
+    s=10;
+    f=R(bc.normalize()).rev();
+  }
+  f.mul(s).rev();
+  //  println("Vector :" + i + "after stuff f:" + f.x + ", " + f.y);
+  //  println("Vector :" + i + "after stuff :" + P(G.get(V.get(i)), f).write());
+
+  return P(G3D.get(V3D.get(i)), f);
 }
 
 public void addTo3DStructure(pt P, Boolean newLoop)
@@ -1339,6 +1382,58 @@ public void generate3DDataStructure()
   }
   loopStart = -1;
 }
+public void draw3DNextCorner(int i)
+{
+  draw3DCorner(NC3D.get(i), blue, false);
+}
+
+public int prev3DCorner(int i)
+{
+  //println("i: " + i);
+  //println(" swing: " + S.get(i));
+  return S3D.get(NC3D.get(S3D.get(i)));
+}
+
+public void draw3DPrevCorner(int i)
+{
+  draw3DCorner(prev3DCorner(i), magenta, false);
+}
+
+public void draw3DSwingCorner(int i)
+{
+  if (i == S3D.get(i))
+    return;
+  draw3DCorner(S3D.get(i), green, true);
+}
+
+public int unswing3DCorner(int i)
+{
+  return NC3D.get(z3DCorner(i));
+}
+
+public void draw3DUnswingCorner(int i)
+{
+  draw3DCorner(unswing3DCorner(i), yellow, true);
+}
+
+public int z3DCorner(int i)
+{
+  return S3D.get(NC3D.get(i));
+}
+
+public void draw3DZCorner(int i)
+{
+  draw3DCorner(z3DCorner(i), cyan, true);
+}
+
+public void draw3DCorner(int i, int col, boolean ext)
+{
+  pt p = cornerPosition3D(i);
+  stroke(col);
+  fill(col);
+  show(p, 2);
+}
+
 public float CalculateArea()
 {
   float area = 0;

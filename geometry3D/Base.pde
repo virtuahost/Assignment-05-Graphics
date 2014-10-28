@@ -83,14 +83,14 @@ void toggleMode()
   if(key=='d') { deleteMode = !deleteMode; selectMode = false; threeDMode = false;showFaceLoops=false;} 
   if(key=='c') { selectMode = !selectMode; deleteMode=false; if(!selectMode) selectCorner(Mouse(), false); threeDMode = true;showFaceLoops=false;}
   if(key=='a') { selectMode = false; deleteMode = false; threeDMode = false;showFaceLoops=false;}
-  if(key=='x') { threeDMode = true; stopColorGeneration=false;generateRandomColor(true);generate3DDataStructure();draw3DArray();}
+  if(key=='x') { threeDMode = true;showFaceLoops=false;selectMode = false; deleteMode=false;generate3DDataStructure();draw3DArray();}
   
   if(key=='n') { moveNext(); }
   if(key=='p') { movePrev(); }
   if(key=='s') { moveSwing(); }
   if(key=='u') { moveUnswing(); }
   if(key=='z') { moveZ(); }
-  if(key=='f') {showFaceLoops = !showFaceLoops;if(!showFaceLoops){stopColorGeneration=false;generateRandomColor(true);threeDMode = false;}}
+  if(key=='f') {showFaceLoops = !showFaceLoops;if(!showFaceLoops){stopColorGeneration=false;generateRandomColor(true);}else{threeDMode = false;}}
 }
 
 
