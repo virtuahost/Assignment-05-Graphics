@@ -8,16 +8,6 @@ ArrayList<Boolean> DG = new ArrayList<Boolean>();
 
 int toVisitCount;
 ArrayList<Integer> arrTV = new ArrayList<Integer>();      //Visited Vertices
-//////////// 3D Array 
-ArrayList<pt> G3D = new ArrayList<pt>();        //Vertices
-ArrayList<Integer> V3D = new ArrayList<Integer>();      //Half Edges
-ArrayList<Integer> NC3D = new ArrayList<Integer>();      //Next Half Edges
-ArrayList<Integer> S3D = new ArrayList<Integer>();    //Swing Corners
-ArrayList<Integer> arrTV3D = new ArrayList<Integer>();      //Visited Vertices
-Boolean draw3DArray = false;
-int loopStart = -1;
-int zOffset = 20;
-int toVisitCount3D;
 
 //////////// Drawing Variables
 float vertexSize = 2;
@@ -95,7 +85,7 @@ public void initTriangle()
 {
   //  G.add(P(-100, 100,0));
   //  G.add(P(100, -100,0));
-  //  G.add(P(0, 100,0));
+  //  G.add(P(0, 100,0));c
   //  G.add(P(100, 200,0));
   //  G.add(P(50, 250,0));
   //  G.add(P(250, 50,0));
@@ -653,6 +643,7 @@ public pt cornerPosition(int i) //asdf
     //println("hellow " + P(G.get(V.get(i))).write());
     vec bf = V(G.get(V.get(i)), G.get(V.get(NC.get(i))));
     bf.normalize().mul(20).rev();
+    BCBA = -1;
     //return P(G.get(V.get(i)));
     return P(G.get(V.get(i)), bf);
   }
@@ -682,7 +673,7 @@ public pt cornerPosition(int i) //asdf
   f.mul(s).rev();
   //  println("Vector :" + i + "after stuff f:" + f.x + ", " + f.y);
   //  println("Vector :" + i + "after stuff :" + P(G.get(V.get(i)), f).write());
-
+  angleVector = f;
   return P(G.get(V.get(i)), f);
 }
 
@@ -765,14 +756,14 @@ public void drawGraph()
       if (!D.get(NC.get(i))) show(G.get(V.get(NC.get(i))), vertexSize);
       fill(black);
       if (!threeDMode) {
-        text(G.get(V.get(i)).write(), G.get(V.get(i)).x + 15, G.get(V.get(i)).y + 15);
+//        text(G.get(V.get(i)).write(), G.get(V.get(i)).x + 15, G.get(V.get(i)).y + 15);
       }
       noFill();
       if (!threeDMode)
       {
-        text(V.get(i), G.get(V.get(i)).x - 4, G.get(V.get(i)).y + 4);
-        text(V.get(NC.get(i)), G.get(V.get(NC.get(i))).x - 4, G.get(V.get(NC.get(i))).y + 4);
-        text("V(" + i + "): " + G.get(V.get(i)).write() + ":" +  G.get(V.get(NC.get(i))).write(), 900, 200+i*20);
+//        text(V.get(i), G.get(V.get(i)).x - 4, G.get(V.get(i)).y + 4);
+//        text(V.get(NC.get(i)), G.get(V.get(NC.get(i))).x - 4, G.get(V.get(NC.get(i))).y + 4);
+//        text("V(" + i + "): " + G.get(V.get(i)).write() + ":" +  G.get(V.get(NC.get(i))).write(), 900, 200+i*20);
       }
     }
 
@@ -891,7 +882,7 @@ public void drawGraph()
       fill(black);
       text("Selected Face " + smallestCornerIndex + " has an area of " + CalculateArea(), 100, 120);
     }
-  }
+  }  
   if(threeDMode && showSelCorner && selCorner != -1)
   {
       fill(black);
@@ -1091,23 +1082,21 @@ public void recurseDrawFace(int i)
     //      }
     //      else
     //      {
-    //      if(outSideLoop)
-    //      {
-    //        beginShape(LINES);
-    //        stroke(randomLoopColor.get(colorIndex));
-    //        int r =50;
-    //        int k = ceil((BCBA-PI)/(PI/5));
-    //        float e = (BCBA-PI)/k;
-    //        for(float a=PI/2;a<BCBA-PI/2+0.01;a+=e)
-    //        {
-    //          pt temp=R(P(cp,r,U(cp,ncp)),-a,cp);
-    //          v(temp);
-    //          show(temp,2);
-    //        }
-    //        endShape();
-    //      }
-    //      else
-    //      {  
+//          if(outSideLoop)
+//          {
+//            beginShape(LINES);
+//            stroke(randomLoopColor.get(colorIndex));
+//            int r =50;
+//            int k = ceil((BCBA-PI)/(PI/5));
+//            float e = (BCBA-PI)/k;
+//            for(float a=PI/2;a<BCBA-PI/2+0.01;a+=e)
+//            {
+//              pt temp=R(P(cp,r,U(cp,ncp)),-a,cp);
+//              v(temp);
+//              show(temp,2);
+//            }
+//            endShape();
+//          }
     if (threeDMode)
     {
       //          beginShape();
@@ -1120,8 +1109,26 @@ public void recurseDrawFace(int i)
       //          endShape(CLOSE);
     } else
     {
-      stroke(randomLoopColor.get(colorIndex));
-      line(cp.x, cp.y, ncp.x, ncp.y);
+//      if(outSideLoop)
+//      {
+//        beginShape(LINES);
+//        stroke(randomLoopColor.get(colorIndex));
+//        int r =50;
+//        int k = ceil((BCBA-PI)/(PI/5));
+//        float e = (BCBA-PI)/k;        
+//        for(float a=PI/2;a<BCBA-PI/2+0.01;a+=e)
+//        {
+//          pt temp=R(P(cp),-a,G.get(V.get(i)));
+//          v(temp);
+//          show(temp,2);
+//        }
+//        endShape();
+//      }
+//      else
+//      {
+        stroke(randomLoopColor.get(colorIndex));
+        line(cp.x, cp.y, ncp.x, ncp.y);
+//      }
     }
     //     }
     //      }
@@ -1140,340 +1147,6 @@ public void recurseDrawFace(int i)
     recurseDrawFace(newToVisit);
   } else        //Nothing left to visit
   return;
-}
-
-public Boolean create3DArray()
-{
-  toVisitCount3D = V.size();
-  arrTV3D.clear();
-  for (int i = 0; i < V.size (); i++)
-  {
-    arrTV3D.add(1);
-  }
-  recurse3DArray(0);
-  if (toVisitCount3D == 0) 
-    return true;
-
-  return false;
-}
-
-public void recurse3DArray(int i)
-{
-  if ((arrTV3D.get(i) != -1))
-  {
-    arrTV3D.set(i, -1);
-    toVisitCount3D--;
-  } else if (toVisitCount3D != 0)
-  {     
-    int temp = i;
-    if (smallestCornerID > -1)
-    {
-      if (!outSideLoop)
-      {             
-        outSideLoop = true;
-      }
-    }
-    smallestCornerID = -1;
-    arrCalArea.clear();
-    for (int j =0; j < arrTV3D.size (); j++)
-    {
-      if ((arrTV3D.get(j) != -1)&&!D.get(j))
-      {
-        i = j;
-        arrTV3D.set(i, -1);
-        toVisitCount3D--; 
-        break;
-      }
-    }
-    if (temp == i)
-    {
-      toVisitCount3D=0;
-      return;
-    }
-  } else
-  {
-    float area = CalculateArea();   
-    if (!outSideLoop)
-    { 
-      outSideLoop = true;
-    }
-    smallestCornerID = -1;
-    arrCalArea.clear();
-    return;
-  }
-
-  int newToVisit = -1;
-  if (!D.get((i)))
-  {
-    if (i < smallestCornerID || smallestCornerID == -1)
-    {
-      smallestCornerID = i;
-    }
-    newToVisit = NC.get(i);
-    pt cp = cornerPosition(i);
-    pt ncp = cornerPosition(NC.get(i));      
-    if (arrCalArea.size() == 0)
-    {
-      vec bf = V(G.get(V.get(i)), cp);
-      bf.normalize().mul(500);
-      pt P = P(G.get(V.get(i)), bf);
-      for (int k=0; k<V.size (); k++)
-      {
-        if (!isSame(G.get(V.get(i)), G.get(V.get(k))) && !isSame(G.get(V.get(i)), G.get(V.get(NC.get(k)))))
-        {
-          if (!isSame(intersect(G.get(V.get(i)).x, G.get(V.get(i)).y, P.x, P.y, G.get(V.get(k)).x, G.get(V.get(k)).y, G.get(V.get(NC.get(k))).x, G.get(V.get(NC.get(k))).y), DONT_INTERSECT))
-          { 
-            //              println(i + k+ NC.get(k));
-            //              stroke(red);line(G.get(V.get(i)).x,G.get(V.get(i)).y,P.x,P.y);
-            //              stroke(green);line(G.get(V.get(k)).x,G.get(V.get(k)).y,G.get(V.get(NC.get(k))).x,G.get(V.get(NC.get(k))).y);
-            outSideLoop=false;
-            break;
-          }
-        }
-      }
-    }
-//    if(arrCalArea.size()==0 && loopStart > -1)
-//    {
-//      return;
-//    }
-    addTo3DStructure(cp, (arrCalArea.size()==0));
-    arrCalArea.add(cp);
-    arrCalArea.add(ncp);
-  } else
-  {
-    newToVisit = i;
-  }
-  if (newToVisit > -1)  
-  {
-    recurse3DArray(newToVisit);
-  } else        //Nothing left to visit
-  return;
-}
-public Boolean draw3DArray()
-{
-  for (int i =0; i<V3D.size();i++)
-  {
-    beginShape();
-    //fill(yellow);
-//    show(G3D.get(V3D.get(i)),10);//,G3D.get(V3D.get(NC3D.get(i))));
-    fill(cyan);stub(G3D.get(V3D.get(i)), V(G3D.get(V3D.get(i)), G3D.get(V3D.get(NC3D.get(i)))), 1, 1);noFill();
-    //fill(yellow);stub(cornerPosition3D(i), V(cornerPosition3D(i), cornerPosition3D(NC3D.get(i))), 1, 1);noFill();
-    endShape(CLOSE);
-  }
-  return true;
-}
-
-public pt cornerPosition3D(int i) 
-{
-  if (i == S3D.get(i))
-  {
-    vec bf = V(G3D.get(V3D.get(i)), G3D.get(V3D.get(NC3D.get(i))));
-    bf.normalize().mul(20).rev();
-    //return P(G.get(V.get(i)));
-    return P(G3D.get(V3D.get(i)), bf);
-  }
-
-  vec bc = V(G3D.get(V3D.get(i)), G3D.get(V3D.get(NC3D.get(i))));
-  vec ba = V(G3D.get(V3D.get(i)), G3D.get(V3D.get(prev3DCorner(i))));
-  BCBA = positive(angle(bc, ba, true));
-
-  float s = 10/det2(ba.normalize(), bc.normalize());
-  vec f = A(ba, bc);
-  if (Float.isInfinite(s))
-  {
-    s=10;
-    f=R(bc.normalize()).rev();
-  }
-  f.mul(s).rev();
-
-  return P(G3D.get(V3D.get(i)), f);
-}
-
-public void addTo3DStructure(pt P, Boolean newLoop)
-{
-  if (newLoop)
-  {
-    if (loopStart > -1)
-    {
-      NC3D.set(V3D.size()-6, loopStart);//C1
-      println("NC: " + (V3D.size()-6) + " value: " + NC3D.get(V3D.size()-6));
-      NC3D.set(loopStart+1, V3D.size()-4);//C2
-      println("NC: " + (loopStart+1) + " value: " + NC3D.get(loopStart+1));
-      NC3D.set(loopStart+3, V3D.size()-3);//C4
-      println("NC: " + (loopStart+3) + " value: " + NC3D.get(loopStart+3));
-      NC3D.set(V3D.size()-2, loopStart+5);//C5
-      println("NC: " + (V3D.size()-2) + " value: " + NC3D.get(V3D.size()-2));
-      loopStart = V3D.size();
-    } else
-    {      
-      loopStart = 0;
-    }
-  }
-  G3D.add(P);  
-  println("G: " + (G3D.size()-1) + " value: " + P.x + ", " + P.y + ", " + P.z); 
-  V3D.add(G3D.size()-1);  
-  println("V: " + (V3D.size()-1) + " value: " + V3D.get(V3D.size()-1));
-  V3D.add(G3D.size()-1);
-  println("V: " + (V3D.size()-1) + " value: " + V3D.get(V3D.size()-1));
-  V3D.add(G3D.size()-1);
-  println("V: " + (V3D.size()-1) + " value: " + V3D.get(V3D.size()-1));
-  S3D.add(V3D.size()-2);  
-  println("S: " + (S3D.size()-1) + " value: " + S3D.get(S3D.size()-1));
-  S3D.add(V3D.size()-1);
-  println("S: " + (S3D.size()-1) + " value: " + S3D.get(S3D.size()-1));
-  S3D.add(V3D.size()-3);
-  println("S: " + (S3D.size()-1) + " value: " + S3D.get(S3D.size()-1));
-  pt Pz = P(P.x, P.y, zOffset);
-  G3D.add(Pz);
-  println("G: " + (G3D.size()-1) + " value: " + Pz.x + ", " + Pz.y + ", " + Pz.z);
-  V3D.add(G3D.size()-1);
-  println("V: " + (V3D.size()-1) + " value: " + V3D.get(V3D.size()-1));
-  V3D.add(G3D.size()-1);
-  println("V: " + (V3D.size()-1) + " value: " + V3D.get(V3D.size()-1));
-  V3D.add(G3D.size()-1);
-  println("V: " + (V3D.size()-1) + " value: " + V3D.get(V3D.size()-1));
-  S3D.add(V3D.size()-1);
-  println("S: " + (S3D.size()-1) + " value: " + S3D.get(S3D.size()-1));
-  S3D.add(V3D.size()-3);
-  println("S: " + (S3D.size()-1) + " value: " + S3D.get(S3D.size()-1));
-  S3D.add(V3D.size()-2);
-  println("S: " + (S3D.size()-1) + " value: " + S3D.get(S3D.size()-1));
-  NC3D.add(-1);
-  NC3D.add(-1);
-  NC3D.add(-1);
-  NC3D.add(-1);
-  NC3D.add(-1);
-  NC3D.add(-1);
-  NC3D.set(NC3D.size()-6, V3D.size());//To be updated again on newLoop start for the previous iteration to close loop.C1  
-  println("NC: " + (NC3D.size() - 6) + " value: " + NC3D.get(NC3D.size()-6));
-  if (!newLoop)
-  {
-    NC3D.set(NC3D.size()-5, V3D.size()-10);//To be updated again on newLoop start for the previous iteration to close loop.C2
-    println("NC: " + (NC3D.size() - 5) + " value: " + NC3D.get(NC3D.size()-5));
-  }
-  NC3D.set(NC3D.size()-4, V3D.size()-2);//C3
-  println("NC: " + (NC3D.size() - 4) + " value: " + NC3D.get(NC3D.size()-4));
-  if (!newLoop)
-  {
-    NC3D.set(NC3D.size()-3, V3D.size()-9);//To be updated again on newLoop start for the previous iteration to close loop.C4
-    println("NC: " + (NC3D.size() - 3) + " value: " + NC3D.get(NC3D.size()-3));
-  }
-  NC3D.set(NC3D.size()-2, V3D.size()+5);//To be updated again on newLoop start for the previous iteration to close loop.C5
-  println("NC: " + (NC3D.size() - 2) + " value: " + NC3D.get(NC3D.size()-2));
-  NC3D.set(NC3D.size()-1, V3D.size()-5);//C6
-  println("NC: " + (NC3D.size() - 1) + " value: " + NC3D.get(NC3D.size()-1));
-}
-public void generate3DDataStructure()
-{
-  G3D.clear();
-  V3D.clear();      //Half Edges
-  NC3D.clear();      //Next Half Edges
-  S3D.clear();    //Swing Corners
-  create3DArray();
-  if (loopStart > -1)
-  {
-    NC3D.set(V3D.size()-6, loopStart);//C1
-    println("NC: " + (V3D.size()-6) + " value: " + NC3D.get(V3D.size()-6));
-    NC3D.set(loopStart+1, V3D.size()-4);//C2
-    println("NC: " + (loopStart+1) + " value: " + NC3D.get(loopStart+1));
-    NC3D.set(loopStart+3, V3D.size()-3);//C4
-    println("NC: " + (loopStart+3) + " value: " + NC3D.get(loopStart+3));
-    NC3D.set(V3D.size()-2, loopStart+5);//C5
-    println("NC: " + (V3D.size()-2) + " value: " + NC3D.get(V3D.size()-2));
-  }
-  loopStart = -1;
-}
-public void draw3DNextCorner(int i)
-{
-  draw3DCorner(NC3D.get(i), blue, false);
-}
-
-public int prev3DCorner(int i)
-{
-  //println("i: " + i);
-  //println(" swing: " + S.get(i));
-  return S3D.get(NC3D.get(S3D.get(i)));
-}
-
-public void draw3DPrevCorner(int i)
-{
-  draw3DCorner(prev3DCorner(i), magenta, false);
-}
-
-public void draw3DSwingCorner(int i)
-{
-  if (i == S3D.get(i))
-    return;
-  draw3DCorner(S3D.get(i), green, true);
-}
-
-public int unswing3DCorner(int i)
-{
-  return NC3D.get(z3DCorner(i));
-}
-
-public void draw3DUnswingCorner(int i)
-{
-  draw3DCorner(unswing3DCorner(i), yellow, true);
-}
-
-public int z3DCorner(int i)
-{
-  return S3D.get(NC3D.get(i));
-}
-
-public void draw3DZCorner(int i)
-{
-  draw3DCorner(z3DCorner(i), cyan, true);
-}
-
-public void draw3DCorner(int i, int col, boolean ext)
-{
-//  pt p = G3D.get(V3D.get(i));
-  pt p = cornerPosition3D(i);
-  stroke(col);
-  fill(col);
-  show(p, 2);
-}
-public void selectCorner3D(pt P)
-{
-  showSelCorner = true;
-  selCorner = 5;
-//  println("Points: " + P.x +", " + P.y +", " + P.z);
-//  for(int i =0;i<V3D.size();i++)
-//  {
-//    pt Q = cornerPosition3D(i);    
-//    println("Q Points: " + Q.x +", "+ Q.y +", "+ Q.z);
-//    if(d(P,Q)<5)
-//    {
-//      showSelCorner = true;
-//      selCorner = i;
-//      break;
-//    }
-//  }
-}
-
-public void move3DNext()
-{
-  println("Curr Corner: " + selCorner);
-  selCorner = NC3D.get(selCorner);
-  println("Next Corner: " + selCorner);
-}
-public void move3DPrev()
-{
-  selCorner = prev3DCorner(selCorner);
-}
-public void move3DSwing()
-{
-  selCorner = S3D.get(selCorner);
-}
-public void move3DUnswing()
-{
-  selCorner = unswing3DCorner(selCorner);
-}
-public void move3DZ()
-{
-  selCorner = z3DCorner(selCorner);
 }
 
 public float CalculateArea()

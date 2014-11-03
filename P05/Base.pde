@@ -5,6 +5,8 @@ pt dragStartVertex;
 boolean deleteMode = false;
 Boolean selectMode = false;
 Boolean threeDMode = false;
+Boolean drawSkeleton = false;
+Boolean showLoops = false;
 
 void initBase()
 {
@@ -44,8 +46,17 @@ void calculateOnMousePressChanges()
     }
     else
     {
+      pushMatrix();   // to ensure that we can restore the standard view before writing on the canvas
+    camera();       // sets a standard perspective
+    translate(width/3,height/6,dz); // puts origin of model at screen center and moves forward/away by dz
+    lights();  // turns on view-dependent lighting
+    rotateX(rx); rotateY(ry); // rotates the model around the new origin (center of screen)
+    rotateX(PI/2); // rotates frame around X to make X and Y basis vectors parallel to the floor
       pt P = pick(mouseX,mouseY);
       selectCorner3D(P);
+      popMatrix();
+//      println("In 3D mode");
+//      selectCorner3D(mouseX,mouseY);
     }
   }
 }
@@ -88,16 +99,18 @@ boolean isDrag()
 /****************************Toggle modes to enable drawing of polygons*****************************************************/
 void toggleMode()
 {
-  if(key=='d') { deleteMode = !deleteMode; selectMode = false; threeDMode = false;showFaceLoops=false;} 
-  if(key=='c') { selectMode = !selectMode; deleteMode=false; if(!selectMode) selectCorner(Mouse(), false); threeDMode = true;showFaceLoops=false;}
-  if(key=='a') { selectMode = false; deleteMode = false; threeDMode = false;showFaceLoops=false;}
-  if(key=='x') { threeDMode = true;showFaceLoops=false;selectMode = false; deleteMode=false;generate3DDataStructure();draw3DArray();}
+  if(key=='d') { deleteMode = !deleteMode; selectMode = false;selectCorner(Mouse(), false); threeDMode = false;showFaceLoops=false;} 
+  if(key=='c') { selectMode = !selectMode; deleteMode=false; if(!selectMode) selectCorner(Mouse(), false); showFaceLoops=false;}
+  if(key=='a') { selectMode = false;selectCorner(Mouse(), false);deleteMode = false; threeDMode = false;showFaceLoops=false;}
+  if(key=='x') { threeDMode = true;showFaceLoops=false;selectMode = false;selectCorner(Mouse(), false); deleteMode=false;drawSkeleton=false;generate3DDataStructure();}
+  if(key=='1') { if(threeDMode){drawSkeleton = !drawSkeleton;}showFaceLoops=false;selectMode = false;selectCorner(Mouse(), false); deleteMode=false;}
+  if(key=='2'){showLoops=!showLoops;}
   
   if(key=='n') { if(threeDMode){move3DNext();}else{moveNext();} }
   if(key=='p') { if(threeDMode){move3DPrev();}else{movePrev();}}
   if(key=='s') { if(threeDMode){move3DSwing();}else{moveSwing();} }
   if(key=='u') { if(threeDMode){move3DUnswing();}else{moveUnswing();}}
-  if(key=='z') { if(threeDMode){move3DZ();}else{moveZ();}}
+  //if(key=='z') { if(threeDMode){move3DZ();}else{moveZ();}}
   if(key=='f') {showFaceLoops = !showFaceLoops;if(!showFaceLoops){stopColorGeneration=false;generateRandomColor(true);}else{threeDMode = false;}}
 }
 
