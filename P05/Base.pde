@@ -106,11 +106,11 @@ void toggleMode()
   if(key=='1') { if(threeDMode){drawSkeleton = !drawSkeleton;}showFaceLoops=false;selectMode = false;selectCorner(Mouse(), false); deleteMode=false;}
   if(key=='2'){showLoops=!showLoops;}
   
-  if(key=='n') { if(threeDMode){move3DNext();}else{moveNext();} }
-  if(key=='p') { if(threeDMode){move3DPrev();}else{movePrev();}}
-  if(key=='s') { if(threeDMode){move3DSwing();}else{moveSwing();} }
-  if(key=='u') { if(threeDMode){move3DUnswing();}else{moveUnswing();}}
-  //if(key=='z') { if(threeDMode){move3DZ();}else{moveZ();}}
+  if(key=='n' && showSelCorner) { if(threeDMode){move3DNext();}else{moveNext();} }
+  if(key=='p' && showSelCorner) { if(threeDMode){move3DPrev();}else{movePrev();}}
+  if(key=='s' && showSelCorner) { if(threeDMode){move3DSwing();}else{moveSwing();} }
+  if(key=='u' && showSelCorner) { if(threeDMode){move3DUnswing();}else{moveUnswing();}}
+  //if(key=='z' && showSelCorner) { if(threeDMode){move3DZ();}else{moveZ();}}
   if(key=='f') {showFaceLoops = !showFaceLoops;if(!showFaceLoops){stopColorGeneration=false;generateRandomColor(true);}else{threeDMode = false;}}
 }
 

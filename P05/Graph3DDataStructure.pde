@@ -90,56 +90,34 @@ public void recurse3DArray(int i)
         }
       }
     }
-    //    if(arrCalArea.size()==0 && loopStart > -1)
-    //    {
-    //      return;
-    //    }
     if (outSideLoop && (angleForUse > PI || angleForUse == -1))
     { 
       int r =5;
-//      int k = ceil((angleForUse)/(PI/5));
-//      vec bc = V(G.get(V.get(i), cp);
-//      vec ba = V(G.get(V.get(i), G3D.get(V3D.get(i)));
-//      angle3D = positive(angle(bc, ba, true));
-//      float e = (angleForUse)/4;      
       Boolean newStartLoop = (arrCalArea.size()==0);
-//      for (float a=0; a<angleForUse-PI/2+0.01; a+=e)
-//      {
-//        pt temp=R(P(G.get(V.get(i)), r, U(G.get(V.get(i)), cp)), PI/2, G.get(V.get(i)));
-        vec bc;
-        vec ba;
-//        vec temp;
-        if (i == S.get(i) && angleForUse == -1)
-        {
-//          bc = V(G.get(V.get(i)), G.get(V.get(NC.get(i))));
-//          ba = R(bc);
-          pt temp=R(G.get(V.get(i)),-PI/4,cp);
-          addTo3DStructure(temp, newStartLoop);//(arrCalArea.size()==0));        
-          
-          addTo3DStructure(cp, false);
-  //        
-  //        temp=R(P(G.get(V.get(i)), r, U(G.get(V.get(i)), cp)), PI, G.get(V.get(i)));
-  //        addTo3DStructure(temp, false);
-          temp=R(G.get(V.get(i)),PI/4,cp);
-          addTo3DStructure(temp, false);
-        }
-        else
-        {
-          bc = V(G.get(V.get(i)), G.get(V.get(NC.get(i))));
-          ba = V(G.get(V.get(i)), G.get(V.get(prevCorner(i))));
-          vec temp=R(reqdVec,-PI/4,bc.normalize(),ba.normalize());
-          addTo3DStructure(P(G.get(V.get(i)), temp), newStartLoop);//(arrCalArea.size()==0));        
-          
-          addTo3DStructure(cp, false);
-  //        
-  //        temp=R(P(G.get(V.get(i)), r, U(G.get(V.get(i)), cp)), PI, G.get(V.get(i)));
-  //        addTo3DStructure(temp, false);
-          temp=R(reqdVec,PI/4,bc.normalize(),ba.normalize());
-          addTo3DStructure(P(G.get(V.get(i)), temp), false);
-        }
-//        newStartLoop = false;
-//      }      
-//      println("Bump: " + V3D.size());
+      vec bc;
+      vec ba;
+      if (i == S.get(i) && angleForUse == -1)
+      {
+        pt temp=R(G.get(V.get(i)),-PI/16,cp);
+        addTo3DStructure(temp, newStartLoop);     
+        
+        addTo3DStructure(cp, false);
+ 
+        temp=R(G.get(V.get(i)),PI/16,cp);
+        addTo3DStructure(temp, false);
+      }
+      else
+      {
+        bc = V(G.get(V.get(i)), G.get(V.get(NC.get(i))));
+        ba = V(G.get(V.get(i)), G.get(V.get(prevCorner(i))));
+        vec temp=R(reqdVec,-PI/8,bc.normalize(),ba.normalize());
+        addTo3DStructure(P(G.get(V.get(i)), temp), newStartLoop);//(arrCalArea.size()==0));        
+        
+        addTo3DStructure(cp, false);
+
+        temp=R(reqdVec,PI/8,bc.normalize(),ba.normalize());
+        addTo3DStructure(P(G.get(V.get(i)), temp), false);
+      }
     } else
     {
       addTo3DStructure(cp, (arrCalArea.size()==0));
@@ -191,10 +169,6 @@ public Boolean draw3DArray()
     if (arrTV3D.get(i) == 0)continue;    
     fill(color(255- i, 255- i-20, 255- i-30));
     beginShape();
-    //fill(yellow);    
-    //    show(G3D.get(V3D.get(i)),10);//,G3D.get(V3D.get(NC3D.get(i))));
-    //    println("I: " + i + ", " + (255- i));
-    //stroke(color(255- i, 255- i-20, 255- i-30));
     if (drawSkeleton)
     {
       stub(G3D.get(V3D.get(i)), V(G3D.get(V3D.get(i)), G3D.get(V3D.get(NC3D.get(i)))), 1, 1);
@@ -202,15 +176,10 @@ public Boolean draw3DArray()
     {
       vertex(G3D.get(V3D.get(i)));
     }
-    //fill(yellow);stub(cornerPosition3D(i), V(cornerPosition3D(i), cornerPosition3D(NC3D.get(i))), 1, 1);noFill();
     arrTV3D.set(i, 0);    
     startCorner = NC3D.get(i);
     while (i!=startCorner)
     {
-      //    show(G3D.get(V3D.get(i)),10);//,G3D.get(V3D.get(NC3D.get(i))));
-      //      fill(color((255/(i*20+1)+255)/2, (255/(i*20+2)+255)/2, (255/(i*20+3)+255)/2)); 
-      //stroke(color(255- i, 255- i-20, 255- i-30));
-//      println("Reach: " + i + ", " + startCorner);
       if (drawSkeleton)
       {
         stub(G3D.get(V3D.get(startCorner)), V(G3D.get(V3D.get(startCorner)), G3D.get(V3D.get(NC3D.get(startCorner)))), 1, 1);
@@ -218,8 +187,6 @@ public Boolean draw3DArray()
       {
         vertex(G3D.get(V3D.get(startCorner)));
       }
-      //      noFill();
-      //fill(yellow);stub(cornerPosition3D(startCorner), V(cornerPosition3D(startCorner), cornerPosition3D(NC3D.get(startCorner))), 1, 1);noFill();
       arrTV3D.set(startCorner, 0);
       startCorner = NC3D.get(startCorner);
     }
@@ -243,15 +210,28 @@ public pt cornerPosition3D(int i)
   vec ba = V(G3D.get(V3D.get(prev3DCorner(i))), G3D.get(V3D.get(i)));
   angle3D = positive(angle(bc, ba, true));
 
-  float s = 10/det2(ba.normalize(), bc.normalize())*0.001;
-  vec f = A(ba, bc);
+//  float s = 10/det2(ba.normalize(), bc.normalize())*0.001;
+//  vec f = A(ba, bc);
+//  if (Float.isInfinite(s))
+//  {
+//    s=10;
+//    f=R(bc.normalize()).rev();
+//  }
+//  f.mul(s).rev();
+//
+//  return P(G3D.get(V3D.get(i)), f);
+  //float s = 10/det2(ba.normalize(), bc.normalize())*0.001;
+  vec f = A(ba.normalize(), bc.normalize());  
   if (Float.isInfinite(s))
   {
     s=10;
     f=R(bc.normalize()).rev();
   }
-  f.mul(s).rev();
-
+  f.mul(4).rev();
+  if(angle3D > PI)
+  {
+    f.rev();
+  }
   return P(G3D.get(V3D.get(i)), f);
 }
 
@@ -375,8 +355,6 @@ public void createBridgeLines()
   }
   int i =0;
   int loopStart = -1;
-//  for (int i = 0; i < V.size(); i++)
-//  while(i<V.size())
   while(loopCount -1 > 0)
   {
     if(loopStart == i)
@@ -397,11 +375,6 @@ public void createBridgeLines()
       }
       continue;
     }
-//    if(loopCount - 1 == 0)
-//    {
-//      loopCount = -1;      
-//      break;
-//    }
     if(arrTV3D.get(i) == 0 && arrTV3D.get(S.get(i)) != 0)
     {
 //      println("Swing : " + findStartCorner(cornerPosition(i)) + ", " + findStartCorner(cornerPosition(S.get(i))));
@@ -421,22 +394,6 @@ public void createBridgeLines()
       i = NC.get(i);
       continue;
     }
-//    if(arrTV3D.get(i) == 0 && arrTV3D.get(unswingCorner(i)) != 0)
-//    {
-//      println("Un Swing : " + findStartCorner(cornerPosition(i)) + ", " + findStartCorner(cornerPosition(S.get(i))));
-//      setBridgeLines(findStartCorner(cornerPosition(unswingCorner(i))),findStartCorner(cornerPosition(i)),orgCount);
-//      markAllVisited(unswingCorner(i));
-//      i = unswingCorner(i);
-//      continue;
-//    } 
-//    if(arrTV3D.get(S.get(i)) == 0 && arrTV3D.get(S.get(S.get(i))) != 0)
-//    {
-//      println("Swing Swing : " + findStartCorner(cornerPosition(S.get(i))) + ", " + findStartCorner(cornerPosition(S.get(S.get(i)))));
-//      setBridgeLines(findStartCorner(cornerPosition(S.get(i))),findStartCorner(cornerPosition(S.get(S.get(i)))),orgCount);
-//      markAllVisited(S.get(S.get(i)));
-//      i = S.get(S.get(i));
-//      continue;
-//    }
     if(arrTV3D.get(i) == 0)
     {
       i++;
@@ -460,7 +417,6 @@ public void createBridgeLines()
     {
       loopCount--;    
       println("Non Swing : " + findStartCorner(cornerPosition(i)) + ", " + findStartCorner(cornerPosition(S.get(i))));
-  //    ArrayList<pt> corners = cornerInfo(V.get(i));
       setBridgeLines(findStartCorner(cornerPosition(i)),findStartCorner(cornerPosition(S.get(i))),orgCount);
       Boolean needPath = markAllVisited(i);    
       Boolean needPath2 = markAllVisited(S.get(i));
@@ -468,67 +424,8 @@ public void createBridgeLines()
     }
 //    i=S.get(i);
     i=NC.get(i);
-//    if(checkAllVisited() == -1 && loopCount-1==1)
-//    {
-//      
-//    }
   }
 }
-
-//public void createBridgeLines()
-//{
-//  int orgLoopCount = loopCount;
-//  arrTV3D.clear();
-//  int j = 0;
-//  int endCont = V.size();
-//  for (int i = 0; i < V.size (); i++)
-//  {
-//    if(!D.get(i))
-//    {    
-//      arrTV3D.add(1);
-//    }
-//    else
-//    {
-//      arrTV3D.add(0);
-//    }
-//  }
-//  
-//  int startLoopPt = -1;
-//  Boolean forceEdge = false;
-//  while(endCont > j)
-//  {
-//    if(D.get(j)){j++;continue;}
-//    if(loopCount - 1 == 0){loopCount=-1;break;}
-//    if(j==S.get(j)){j++;continue;}
-//    if(checkIfswingInSameLoop(j,S.get(j))){j++;continue;}
-//    if(arrTV3D.get(S.get(j)) != 0 && arrTV3D.get(j) == 0)
-//    {
-////      setBridgeLines(findStartCorner(cornerPosition(j)),findStartCorner(cornerPosition(S.get(j))));
-////      markAllVisited(S.get(j));
-//      startLoopPt = j;
-//      j=S.get(j);
-////      forceEdge = true;
-////      loopCount--;
-//      continue;
-//    }    
-//    if(startLoopPt > -1 && startLoopPt == j && arrTV3D.get(j) == 0){int temp = checkAllVisited();if(temp > -1){j=temp;continue;}else{break;}}
-//    if(arrTV3D.get(j) == 0){j=NC.get(j);continue;}
-//    setBridgeLines(findStartCorner(cornerPosition(j)),findStartCorner(cornerPosition(S.get(j))));
-//    println("Non Swing : " + j);
-//    markAllVisited(j);    
-////    if(!forceEdge)
-////    {
-//      markAllVisited(S.get(j));
-////    }
-////    else
-////    {
-////      forceEdge = false;
-////    }
-//    startLoopPt = j;
-//    j=NC.get(j);
-//    loopCount--;
-//  }
-//}
 
 public int checkAllVisited()
 {
@@ -630,43 +527,14 @@ public void setBridgeLines(int i, int j,int orgCount)
   //Next Corner Fix for top
   NC3D.set(NC3D.size()-3, j+3);//C8 start
   println("NC: " + (NC3D.size()-3) + " value: " + NC3D.get(NC3D.size()-3));
-//  if(i+9 > orgCount - 1)
-//  {
-//    NC3D.set(4,NC3D.size()-3);//C12 start
-//    println("NC: " + 4 + " value: " + NC3D.get(4));
-//  }
-//  else
-//  {
-    NC3D.set(prevStartCorner,NC3D.size()-3);//C12 start
-    println("NC: " + (prevStartCorner) + " value: " + NC3D.get(prevStartCorner));
-//  }
+  NC3D.set(prevStartCorner,NC3D.size()-3);//C12 start
+  println("NC: " + (prevStartCorner) + " value: " + NC3D.get(prevStartCorner));
   NC3D.set(NC3D.size()-1, i+3);//C8 end
   println("NC: " + (NC3D.size()-1) + " value: " + NC3D.get(NC3D.size()-1));
-//  if(j+9 > orgCount - 1)
-//  {
-//    NC3D.set(4, NC3D.size()-1);//C12 end
-//  }
-//  else
-//  {
-    NC3D.set(prevEndCorner, NC3D.size()-1);//C12 end
-//  }
+  NC3D.set(prevEndCorner, NC3D.size()-1);//C12 end
   println("NC: " + (prevEndCorner) + " value: " + NC3D.get(prevEndCorner));
 }
 
-//public ArrayList<pt> cornerInfo(int j)
-//{
-//  ArrayList<pt> output = new ArrayList<pt>();
-//  for(int i =0; i < V.size(); i++)
-//  {
-//    if(V.get(i) == j)
-//    {
-//      pt P = cornerPosition(i);
-//      output.add(P);
-//      secondCornerID = i;
-//    }
-//  }
-//  return output;
-//}
 
 public int findStartCorner(pt P)
 {
@@ -768,33 +636,6 @@ public void selectCorner3D(pt P)
       dist = temp;
     }
   }
-  //  showSelCorner = true;
-  //  selCorner = 5;
-  //  println("Points: " + P.x +", " + P.y +", " + P.z);//  xyz/  xyz = P;
-  //  xyz = P;
-  //  pt P = P(x,y,0);
-  //  color c = get(x,y);
-  //  println("Color: " + c + "x: " + x + "y: " + y);
-  //  float startVertex = 255 - red(c);
-  //  int i=(int)startVertex;
-  //  println(i);
-  //  float dist = 0;
-  //  if(i<V3D.size())
-  //  {
-  //    do
-  //    {
-  //      pt Q = ToScreen(cornerPosition3D(i));    
-  //      println("Q Points: " + Q.x +", "+ Q.y +", "+ Q.z);
-  //      if(d(P,Q) < dist || dist == 0)
-  //      {
-  //        showSelCorner = true;
-  //        selCorner = i;
-  //        dist = d(P,Q);
-  //      }
-  //      i = NC3D.get(i);
-  //    }
-  //    while(i!=startVertex);
-  //  }
 }
 
 public void move3DNext()
